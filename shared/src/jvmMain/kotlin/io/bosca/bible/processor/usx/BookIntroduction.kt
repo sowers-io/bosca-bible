@@ -37,7 +37,7 @@ object BookIntroductionFactory : ItemFactory<BookIntroduction>("para") {
 object BookIntroductionTableFactory : ItemFactory<BookIntroduction>("table") {
 
     override fun onInitialize() {
-//        register(TableFactory)
+        register(TableFactory)
     }
 
     override fun create(context: Context, parent: Item?, attributes: Attributes?) =

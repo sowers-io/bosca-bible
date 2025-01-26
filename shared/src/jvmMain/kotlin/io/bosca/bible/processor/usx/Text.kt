@@ -13,6 +13,7 @@ class Text(
     ParagraphItem,
     BookIntroductionEndTitleItem,
     ListItem,
+    ChapterItem,
     BookTitleItem,
     FootnoteItem,
     CrossReferenceItem,

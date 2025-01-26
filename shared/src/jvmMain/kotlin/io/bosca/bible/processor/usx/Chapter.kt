@@ -1,17 +1,37 @@
 package io.bosca.bible.processor.usx
 
-import io.bosca.bible.processor.CompletedBookTag
 import io.bosca.bible.processor.Context
+import io.bosca.bible.processor.StringContext
+import kotlin.collections.List
 
 // export type ChapterType = Paragraph | List | Table | Footnote | CrossReference | Sidebar | ChapterEnd
-interface ChapterItem: Item
+interface ChapterItem : Item
+
+class ChapterVerse(
+    val usfm: String,
+    val chapter: String,
+    val verse: String,
+    val items: List<VerseItems>,
+    val raw: String,
+) {
+
+    fun toString(context: StringContext = StringContext.default): String {
+        var buf = ""
+        for (item in this.items) {
+            buf += item.toString(context)
+        }
+        return buf.trim()
+    }
+
+    override fun toString() = toString(StringContext.default)
+}
 
 class Chapter(
     context: Context,
     parent: Item?,
     book: Book,
     val start: ChapterStart,
-): ItemContainer<ChapterItem>(context, parent) {
+) : ItemContainer<ChapterItem>(context, parent) {
 
     private val verseItems = mutableMapOf<String, MutableList<VerseItems>>()
     private val _end: ChapterEnd? = null
@@ -33,7 +53,7 @@ class Chapter(
             _end
         }
 
-    fun addVerseItems(items: kotlin.collections.List<VerseItems>) {
+    fun addVerseItems(items: List<VerseItems>) {
         items.forEach {
             var current = verseItems[it.usfm]
             if (current == null) {
@@ -48,49 +68,36 @@ class Chapter(
         if (item is ChapterEnd) return
         super.add(item)
     }
-}
 
-/*
-export class Chapter extends UsxItemContainer<ChapterType> {
-
-  getVerses(book: Book): ChapterVerse[] {
-    const verses: ChapterVerse[] = []
-    for (const usfm in this.verseItems) {
-      const items = this.verseItems[usfm]
-      const usfmParts = usfm.split('.')
-      let raw = ''
-      for (const item of items) {
-        raw += book.getRawContent(item.position)
-      }
-      verses.push(new ChapterVerse(
-        usfm,
-        this.number,
-        usfmParts[usfmParts.length - 1],
-        items,
-        raw,
-      ))
+    fun getVerses(book: Book): List<ChapterVerse> {
+        val verses = mutableListOf<ChapterVerse>()
+        for ((usfm, items) in this.verseItems.entries) {
+            val usfmParts = usfm.split('.')
+            var raw = ""
+            for (item in items) {
+                raw += book.getRawContent(item.position)
+            }
+            verses.add(
+                ChapterVerse(
+                    usfm,
+                    this.number,
+                    usfmParts.last(),
+                    items,
+                    raw,
+                )
+            )
+        }
+        verses.sortWith { a, b ->
+            val aChapter = a.chapter.toIntOrNull() ?: 0
+            val bChapter = b.chapter.toIntOrNull() ?: 0
+            if (aChapter > bChapter) return@sortWith 1
+            if (aChapter < bChapter) return@sortWith -1
+            val aVerse = a.verse.toIntOrNull() ?: 0
+            val bVerse = b.verse.toIntOrNull() ?: 0
+            if (aVerse > bVerse) return@sortWith 1
+            if (aVerse < bVerse) return@sortWith -1
+            0
+        }
+        return verses
     }
-
-    function getNumber(value: string): number {
-      let number = parseInt(value)
-      if (isNaN(number)) number = 0
-      return number
-    }
-
-    verses.sort((a, b) => {
-      const aChapter = getNumber(a.chapter)
-      const bChapter = getNumber(b.chapter)
-      if (aChapter > bChapter) return 1
-      if (aChapter < bChapter) return -1
-
-      const aVerse = getNumber(a.verse)
-      const bVerse = getNumber(b.verse)
-      if (aVerse > bVerse) return 1
-      if (aVerse < bVerse) return -1
-      return 0
-    })
-
-    return verses
-  }
 }
- */

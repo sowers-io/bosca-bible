@@ -22,7 +22,7 @@ internal enum class BookTagResult {
     unknown,
 }
 
-class Context(val book: Book) {
+class Context(private val book: Book) {
 
     private val chapters = mutableListOf<Chapter>()
     private val nodes = mutableListOf<Node>()
@@ -50,13 +50,13 @@ class Context(val book: Book) {
             return verses.peek()?.verse
         }
 
-    fun add(parent: Usx?, item: Item): String? {
+    fun add(parent: Usx?, item: Item): VerseStart? {
         if (verses.isEmpty()) return null
         val verses = this.verses.last()
         if (parent == null || parent.verse != verses.verse) {
             verses.add(item)
         }
-        return verses.verse
+        return verses.verseStart
     }
 
     fun supports(factory: ItemFactory<*>, parent: Node, tag: Tag, progression: Int? = null): Boolean {
@@ -82,6 +82,7 @@ class Context(val book: Book) {
         var tagIndex = -1
         do {
             tagIndex++
+            if (tagIndex >= tags.size) return BookTagResult.unknown
             val tagFactory = tags[tagIndex]
             if (completed.contains(tagFactory.tag)) {
                 if (tagFactory.factory === factory) {
@@ -117,13 +118,13 @@ class Context(val book: Book) {
         if (tag.name.lowercase() == "chapter") {
             this.progression = false
         }
-        if (!this.progression || tag.name == "#text" || parent.factory != RootFactory) {
+        if (!this.progression || tag.name == "#text" || parent.factory !== RootFactory) {
             if (!this.progression) {
                 for (t in this.tags) {
                     if (t.factory === factory) return false
                 }
             }
-            return supports(factory, parent, tag)
+            return factory.supports(this, tag.attributes, null)
         }
         when (this.supportsInternal(factory, parent, tag)) {
             BookTagResult.supported -> {

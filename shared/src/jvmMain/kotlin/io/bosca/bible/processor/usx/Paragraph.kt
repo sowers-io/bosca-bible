@@ -11,7 +11,8 @@ class Paragraph(
     parent: Item?,
     attributes: Attributes
 ) : ItemContainer<Item>(context, parent),
-    RootItem {
+    RootItem,
+    ChapterItem {
 
     val style: ParaStyle = ParaStyle.valueOf(attributes["STYLE"] ?: error("missing style"))
     val vid: String? = attributes["VID"]

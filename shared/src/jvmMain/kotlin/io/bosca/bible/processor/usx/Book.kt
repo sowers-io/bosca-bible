@@ -1,10 +1,12 @@
 package io.bosca.bible.processor.usx
 
-import ManifestName
-import PublicationContent
 import io.bosca.bible.processor.Position
 
-class Book(val name: ManifestName, val content: PublicationContent, val raw: String) {
+class Book(
+    private val name: ManifestName,
+    private val content: PublicationContent,
+    private val raw: String
+) {
 
     private val _chapters = mutableListOf<Chapter>()
     private val _chaptersByUsfm = mutableMapOf<String, Chapter>()
@@ -14,6 +16,9 @@ class Book(val name: ManifestName, val content: PublicationContent, val raw: Str
 
     val chapters: kotlin.collections.List<Chapter>
         get() = _chapters
+
+    val chaptersByUsfm: Map<String, Chapter>
+        get() = _chaptersByUsfm
 
     fun addChapter(chapter: Chapter) {
         _chapters.add(chapter)

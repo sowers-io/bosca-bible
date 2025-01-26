@@ -14,6 +14,12 @@ enum class BookHeaderStyle {
     toca3, // Alternative language book Abbreviation
     rem, // Remark
     usfm, // USFM markup version information (may occur if USX was generated from USFM)
+
+    // ?????
+    mt,
+    mt1,
+    mt2,
+    mt3
 }
 
 enum class BookTitleStyle {

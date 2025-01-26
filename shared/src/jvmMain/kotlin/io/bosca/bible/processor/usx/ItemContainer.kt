@@ -9,8 +9,10 @@ abstract class ItemContainer<T : Item>(
     parent: Usx?
 ) : AbstractItem(context, parent) {
 
+    private val _verse: VerseStart? = context.add(parent, this)
+
     private val _items = mutableListOf<T>()
-    override val verse: String? = context.add(parent, this)
+    override val verse: String? = _verse?.number
 
     val items: kotlin.collections.List<T>
         get() = _items

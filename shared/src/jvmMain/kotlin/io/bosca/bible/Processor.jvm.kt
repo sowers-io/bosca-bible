@@ -1,10 +1,18 @@
+package io.bosca.bible
+
+import io.bosca.bible.processor.BookProcessor
+import io.bosca.bible.processor.usx.Bible
+import io.bosca.bible.processor.usx.Book
+import io.bosca.bible.processor.usx.Metadata
+import io.bosca.bible.processor.usx.RootFactory
 import java.util.zip.ZipFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 
-actual suspend fun process(filename: String): Bible {
+actual suspend fun process(filename: String): io.bosca.bible.Bible {
     val files = mutableMapOf<String, ByteArray>()
+
     withContext(Dispatchers.IO) {
         ZipFile(filename).use { file ->
             file.entries().asSequence().forEach { entry ->
@@ -18,7 +26,7 @@ actual suspend fun process(filename: String): Bible {
     val parserFactory = javax.xml.parsers.SAXParserFactory.newInstance()
     val saxParser = parserFactory.newSAXParser()
 
-    files["metadata.xml"]?.let {
+    val metadata = files["metadata.xml"]?.let {
         val root = mutableMapOf<String, Any>()
         val stack = Stack<MutableMap<String, Any>>()
         stack.push(root)
@@ -84,8 +92,21 @@ actual suspend fun process(filename: String): Bible {
             }
         }
         flatten(root)
-        println(root)
+
+        @Suppress("UNCHECKED_CAST")
+        Metadata(root["DBLMetadata"] as Map<String, Any>)
+    } ?: error("missing metadata")
+
+    RootFactory.initialize()
+
+    val processor = BookProcessor()
+    val books = mutableListOf<Book>()
+    for (name in metadata.publication.names) {
+        val content = metadata.publication.contents[name.id] ?: error("missing content: ${name.id}")
+        val file = files[content.file] ?: error("missing file: ${content.file}")
+        val book = processor.process(name, content, file)
+        books.add(book)
     }
 
-    return Bible() // Replace with actual processing to return a Bible object
+    return Bible(books)
 }

@@ -7,13 +7,12 @@ import io.bosca.bible.processor.StringContext
 class VerseItems(
     val usfm: String,
     val position: Position,
-    verse: VerseStart
+    val verseStart: VerseStart
 ) : Usx {
 
-    private val _items = mutableListOf<Item>(verse)
+    private val _items = mutableListOf<Item>(verseStart)
 
-    val number: String = verse.number
-    override val verse: String? = verse.verse
+    override val verse: String = verseStart.number
 
     val items: kotlin.collections.List<Item>
         get() = _items
