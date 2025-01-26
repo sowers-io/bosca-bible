@@ -2,42 +2,6 @@ package io.bosca.bible.processor.usx
 
 import io.bosca.bible.processor.Context
 
-
-class Root(
-    context: Context,
-    parent: Usx?
-) : ItemContainer<UsxItem>(context, parent), UsxItem {
-
-    override val htmlClass: String = ""
-}
-
-object RootFactory : ItemFactory<Root>("usx") {
-
-    override fun onInitialize() {
-        register(BookIdentificationFactory)
-        register(BookHeaderFactory)
-        /*
-    this.register(BookHeaderFactory.instance)
-    this.register(BookTitleFactory.instance)
-    this.register(BookIntroductionFactory.instance)
-    this.register(BookIntroductionTableFactory.instance)
-    this.register(BookIntroductionEndTitleFactory.instance)
-    this.register(BookChapterLabelFactory.instance)
-    this.register(ChapterStartFactory.instance)
-    this.register(ChapterEndFactory.instance)
-    this.register(ParagraphFactory.instance)
-    this.register(ListFactory.instance)
-    this.register(TableFactory.instance)
-    this.register(FootnoteFactory.instance)
-    this.register(CrossReferenceFactory.instance)
-    // this.register(Sidebar)
-    this.register(TextFactory.instance)
-         */
-    }
-
-    override fun create(context: Context, parent: Item?, attributes: Attributes?) = Root(context, parent)
-}
-
 /*
 type UsxType =
   BookIdentification
@@ -49,3 +13,37 @@ type UsxType =
   | ChapterStart
   | ChapterEnd
 */
+
+interface RootItem : Item
+
+class Root(
+    context: Context,
+    parent: Usx?
+) : ItemContainer<RootItem>(context, parent) {
+
+    override val htmlClass: String = ""
+}
+
+object RootFactory : ItemFactory<Root>("usx") {
+
+    override fun onInitialize() {
+        register(BookIdentificationFactory)
+        register(BookHeaderFactory)
+        register(BookTitleFactory)
+        register(BookIntroductionFactory)
+        register(BookIntroductionTableFactory)
+        register(BookIntroductionEndTitleFactory)
+        register(BookChapterLabelFactory)
+        register(ChapterStartFactory)
+        register(ChapterEndFactory)
+        register(ParagraphFactory)
+        register(ListFactory)
+        register(TableFactory)
+        register(FootnoteFactory)
+        register(CrossReferenceFactory)
+        // register(Sidebar)
+        register(TextFactory)
+    }
+
+    override fun create(context: Context, parent: Item?, attributes: Attributes?) = Root(context, parent)
+}

@@ -1,7 +1,9 @@
 package io.bosca.bible.processor
 
-import io.bosca.bible.BookHeaderStyle
+import io.bosca.bible.*
 import io.bosca.bible.processor.usx.*
+import io.bosca.bible.processor.usx.Book
+import io.bosca.bible.processor.usx.Chapter
 import java.util.*
 
 internal enum class CompletedBookTag {
@@ -67,31 +69,16 @@ class Context(val book: Book) {
         val maxStyles: Int,
     )
 
-    private val tags = listOf<ContextTag>(
+    private val tags = listOf(
         ContextTag(BookIdentificationFactory, CompletedBookTag.identification, 1),
         ContextTag(BookHeaderFactory, CompletedBookTag.headers, BookHeaderStyle.entries.size),
+        ContextTag(BookTitleFactory, CompletedBookTag.titles, BookTitleStyle.entries.size),
+        ContextTag(BookIntroductionFactory, CompletedBookTag.introduction, BookIntroductionStyle.entries.size),
+        ContextTag(BookIntroductionEndTitleFactory, CompletedBookTag.endIntroductionTitles, BookIntroductionEndTitleStyle.entries.size),
+        ContextTag(BookChapterLabelFactory, CompletedBookTag.label, BookChapterLabelStyle.entries.size),
     )
 
-    /*
-    private readonly tags = [
-    { factory: BookIdentificationFactory.instance, tag: CompletedBookTag.identification, maxStyles: 1 },
-    { factory: BookHeaderFactory.instance, tag: CompletedBookTag.headers, maxStyles: BookHeaderStyles.length },
-    { factory: BookTitleFactory.instance, tag: CompletedBookTag.titles, maxStyles: BookTitleStyles.length },
-    {
-      factory: BookIntroductionFactory.instance,
-      tag: CompletedBookTag.introduction,
-      maxStyles: BookIntroductionStyles.length,
-    },
-    {
-      factory: BookIntroductionEndTitleFactory.instance,
-      tag: CompletedBookTag.endIntroductionTitles,
-      maxStyles: BookIntroductionEndTitleStyles.length,
-    },
-    { factory: BookChapterLabelFactory.instance, tag: CompletedBookTag.label, maxStyles: BookChapterLabelStyles.length },
-  ]
-*/
-
-    private fun supportsInternal(factory: ItemFactory<*>, parent: Node, tag: Tag, progression: Int? = null): BookTagResult {
+    private fun supportsInternal(factory: ItemFactory<*>, parent: Node, tag: Tag): BookTagResult {
         var tagIndex = -1
         do {
             tagIndex++
@@ -100,7 +87,6 @@ class Context(val book: Book) {
                 if (tagFactory.factory === factory) {
                     return BookTagResult.unsupported
                 }
-                tagIndex++
                 continue
             }
             if (tagFactory.factory === factory) {

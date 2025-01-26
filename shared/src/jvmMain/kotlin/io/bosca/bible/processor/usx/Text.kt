@@ -8,7 +8,19 @@ import io.bosca.bible.processor.StringContext
 class Text(
     context: Context,
     parent: Usx?
-): AbstractItem(context, parent) {
+) : AbstractItem(context, parent),
+    RootItem,
+    ParagraphItem,
+    BookIntroductionEndTitleItem,
+    ListItem,
+    BookTitleItem,
+    FootnoteItem,
+    CrossReferenceItem,
+    CrossReferenceCharItem,
+    CharItem,
+    TableContentItem,
+    BookIntroductionItem,
+    FootnoteCharItem {
 
     var text = ""
 
@@ -32,9 +44,9 @@ class Text(
 }
 
 
-object TextFactory: ItemFactory<Text>("#text") {
+object TextFactory : ItemFactory<Text>("#text") {
 
-    override fun onInitialize() { }
+    override fun onInitialize() {}
 
     override fun create(context: Context, parent: Item?, attributes: Attributes?) = Text(context, parent as? Usx)
 }

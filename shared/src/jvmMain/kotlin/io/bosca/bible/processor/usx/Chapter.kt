@@ -4,7 +4,6 @@ import io.bosca.bible.processor.CompletedBookTag
 import io.bosca.bible.processor.Context
 
 // export type ChapterType = Paragraph | List | Table | Footnote | CrossReference | Sidebar | ChapterEnd
-
 interface ChapterItem: Item
 
 class Chapter(
@@ -34,7 +33,7 @@ class Chapter(
             _end
         }
 
-    fun addVerseItems(items: List<VerseItems>) {
+    fun addVerseItems(items: kotlin.collections.List<VerseItems>) {
         items.forEach {
             var current = verseItems[it.usfm]
             if (current == null) {

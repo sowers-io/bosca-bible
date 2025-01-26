@@ -6,11 +6,13 @@ import io.bosca.bible.processor.Context
 class BookIdentification(
     context: Context,
     parent: Item?,
-    attributes: Attributes?
-) : ItemContainer<Text>(context, parent), UsxItem {
+    attributes: Attributes
+) : ItemContainer<Text>(context, parent),
+    RootItem {
 
-    val id: String = attributes?.get("STYLE") ?: ""
-    val code: BookIdentificationCode = BookIdentificationCode.valueOf(attributes?.get("CODE") ?: error("No code provided for book identification."))
+    val id: String = attributes["STYLE"] ?: ""
+    val code: BookIdentificationCode =
+        BookIdentificationCode.valueOf(attributes["CODE"] ?: error("No code provided for book identification."))
 
     override val htmlClass = "book-identification"
     override val htmlAttributes = mapOf(
@@ -19,8 +21,7 @@ class BookIdentification(
     ) + super.htmlAttributes
 }
 
-
-object BookIdentificationFactory: ItemFactory<BookIdentification>(
+object BookIdentificationFactory : ItemFactory<BookIdentification>(
     "book",
     CodeFactoryFilter(BookIdentificationCode.entries.toSet())
 ) {
@@ -29,5 +30,6 @@ object BookIdentificationFactory: ItemFactory<BookIdentification>(
         register(TextFactory)
     }
 
-    override fun create(context: Context, parent: Item?, attributes: Attributes?) = BookIdentification(context, parent, attributes!!)
+    override fun create(context: Context, parent: Item?, attributes: Attributes?) =
+        BookIdentification(context, parent, attributes!!)
 }

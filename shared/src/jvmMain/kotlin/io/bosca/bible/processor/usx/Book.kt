@@ -12,7 +12,7 @@ class Book(val name: ManifestName, val content: PublicationContent, val raw: Str
     val usfm: String
         get() = content.usfm
 
-    val chapters: List<Chapter>
+    val chapters: kotlin.collections.List<Chapter>
         get() = _chapters
 
     fun addChapter(chapter: Chapter) {

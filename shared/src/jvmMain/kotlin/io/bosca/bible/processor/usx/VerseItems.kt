@@ -15,7 +15,7 @@ class VerseItems(
     val number: String = verse.number
     override val verse: String? = verse.verse
 
-    val items: List<Item>
+    val items: kotlin.collections.List<Item>
         get() = _items
 
     fun add(item: Item) {

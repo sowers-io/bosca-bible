@@ -1,11 +1,7 @@
 package io.bosca.bible.processor.usx
 
-import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
-import org.xml.sax.Attributes
-
-interface UsxItem : Item
 
 interface Usx {
 

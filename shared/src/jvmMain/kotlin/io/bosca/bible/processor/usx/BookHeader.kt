@@ -7,7 +7,8 @@ class BookHeader(
     context: Context,
     parent: Item?,
     attributes: Attributes
-) : ItemContainer<Text>(context, parent), UsxItem {
+) : ItemContainer<Text>(context, parent),
+    RootItem {
 
     val style: BookHeaderStyle = BookHeaderStyle.valueOf(attributes["STYLE"] ?: error("missing style"))
 

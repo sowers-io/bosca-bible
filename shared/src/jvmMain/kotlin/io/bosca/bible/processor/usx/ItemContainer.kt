@@ -12,7 +12,7 @@ abstract class ItemContainer<T : Item>(
     private val _items = mutableListOf<T>()
     override val verse: String? = context.add(parent, this)
 
-    val items: List<T>
+    val items: kotlin.collections.List<T>
         get() = _items
 
     override val htmlAttributes: Map<String, String>

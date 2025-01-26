@@ -10,7 +10,11 @@ class VerseStart(
     context: Context,
     parent: Usx?,
     attributes: Attributes
-) : AbstractItem(context, parent) {
+) : AbstractItem(context, parent),
+    ParagraphItem,
+    ListItem,
+    RowItem,
+    TableContentItem {
 
     val style: VerseStartStyle = VerseStartStyle.valueOf(attributes.get("STYLE") ?: error("missing style"))
     val number: String = attributes.get("NUMBER") ?: error("missing number")
@@ -33,4 +37,14 @@ class VerseStart(
         if (context.includeVerseNumbers) return "$number. "
         return ""
     }
+}
+
+object VerseStartFactory : ItemFactory<VerseStart>(
+    "verse",
+    StyleFactoryFilter(VerseStartStyle.entries.toList()) { VerseStartStyle.valueOf(it) }
+) {
+
+    override fun onInitialize() {}
+    override fun create(context: Context, parent: Item?, attributes: Attributes?) =
+        VerseStart(context, parent, attributes ?: error("missing attributes"))
 }
