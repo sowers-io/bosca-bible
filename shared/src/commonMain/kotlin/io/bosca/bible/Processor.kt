@@ -1,0 +1,1 @@
+expect suspend fun process(filename: String): Bible
