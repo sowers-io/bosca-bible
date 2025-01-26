@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 
-actual suspend fun process(filename: String): io.bosca.bible.Bible {
+actual suspend fun process(filename: String): IBible {
     val files = mutableMapOf<String, ByteArray>()
 
     withContext(Dispatchers.IO) {

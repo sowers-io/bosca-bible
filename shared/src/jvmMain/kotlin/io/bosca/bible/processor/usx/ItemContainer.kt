@@ -1,5 +1,8 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.components.ComponentContainer
+import io.bosca.bible.components.IComponent
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
@@ -23,6 +26,9 @@ abstract class ItemContainer<T : Item>(
     open fun add(item: T) {
         _items.add(item)
     }
+
+    override fun toComponent(context: ComponentContext) =
+        ComponentContainer(items.map { it.toComponent(context) }, context.getStyle(this))
 
     override fun toHtml(context: HtmlContext) = context.render("div", this)
 

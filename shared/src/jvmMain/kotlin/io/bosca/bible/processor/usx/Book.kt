@@ -1,28 +1,34 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.IBook
+import io.bosca.bible.IChapter
+import io.bosca.bible.IName
+import io.bosca.bible.Reference
 import io.bosca.bible.processor.Position
 
 class Book(
-    private val name: ManifestName,
+    override val name: IName,
     private val content: PublicationContent,
     private val raw: String
-) {
+) : IBook {
 
-    private val _chapters = mutableListOf<Chapter>()
-    private val _chaptersByUsfm = mutableMapOf<String, Chapter>()
+    private val _chapters = mutableListOf<IChapter>()
+    private val _chaptersByUsfm = mutableMapOf<String, IChapter>()
 
-    val usfm: String
-        get() = content.usfm
+    override val reference: Reference by lazy {
+        Reference(content.usfm)
+    }
 
-    val chapters: kotlin.collections.List<Chapter>
+    override val chapters: kotlin.collections.List<IChapter>
         get() = _chapters
 
-    val chaptersByUsfm: Map<String, Chapter>
-        get() = _chaptersByUsfm
+    override fun get(reference: Reference): IChapter? {
+        return _chaptersByUsfm[reference.chapterUsfm]
+    }
 
-    fun addChapter(chapter: Chapter) {
+    fun addChapter(chapter: IChapter) {
         _chapters.add(chapter)
-        _chaptersByUsfm[chapter.usfm] = chapter
+        _chaptersByUsfm[chapter.reference.chapterUsfm] = chapter
     }
 
     fun getRawContent(position: Position): String {

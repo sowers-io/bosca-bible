@@ -1,8 +1,9 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.IName
 import kotlin.collections.List
 
-class ManifestName(private val name: Map<String, Any>) {
+class ManifestName(private val name: Map<String, Any>): IName {
 
     val usfm: String
         get() = id.split("-").last().uppercase()
@@ -10,17 +11,17 @@ class ManifestName(private val name: Map<String, Any>) {
     val id: String
         get() = name["id"] as String
 
-    val abbreviation: String
+    override val abbreviation: String
         get() = name["abbr"] as String
 
-    val short: String
+    override val short: String
         get() = name["short"] as String
 
-    val long: String
+    override val long: String
         get() = name["long"] as String
 }
 
-class MetadataSystemId(private val systemId: kotlin.collections.List<Map<String, Any>>) {
+class MetadataSystemId(private val systemId: List<Map<String, Any>>) {
 
     val id: String
         get() {
@@ -36,7 +37,7 @@ class MetadataSystemId(private val systemId: kotlin.collections.List<Map<String,
 class MetadataIdentification(private val identification: Map<String, Any>) {
 
     @Suppress("UNCHECKED_CAST")
-    val systemId = MetadataSystemId(identification["systemId"] as kotlin.collections.List<Map<String, Any>>)
+    val systemId = MetadataSystemId(identification["systemId"] as List<Map<String, Any>>)
 
     val name: String
         get() = identification["name"] as String

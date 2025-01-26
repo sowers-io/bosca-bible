@@ -1,5 +1,7 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.IChapter
+import io.bosca.bible.Reference
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.StringContext
 import kotlin.collections.List
@@ -31,17 +33,17 @@ class Chapter(
     parent: Item?,
     book: Book,
     val start: ChapterStart,
-) : ItemContainer<ChapterItem>(context, parent) {
+) : ItemContainer<ChapterItem>(context, parent), IChapter {
 
     private val verseItems = mutableMapOf<String, MutableList<VerseItems>>()
     private val _end: ChapterEnd? = null
 
     val number = start.number
-    val usfm = "${book.usfm}.${start.number}"
+    override val reference = Reference("${book.reference.usfm}.${start.number}")
 
     override val htmlClass = "chapter c$number"
     override val htmlAttributes = mapOf(
-        "data-usfm" to usfm,
+        "data-usfm" to reference.usfm,
         "data-number" to number,
         *super.htmlAttributes.toList().toTypedArray()
     )

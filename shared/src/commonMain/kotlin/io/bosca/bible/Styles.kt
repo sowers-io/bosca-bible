@@ -15,7 +15,7 @@ enum class BookHeaderStyle {
     rem, // Remark
     usfm, // USFM markup version information (may occur if USX was generated from USFM)
 
-    // ?????
+    // TODO: ????? ... Maybe whatever needs this should be considered a title?
     mt,
     mt1,
     mt2,

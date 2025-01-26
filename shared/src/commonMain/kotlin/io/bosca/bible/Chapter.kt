@@ -1,4 +1,9 @@
 package io.bosca.bible
 
-class Chapter {
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Chapter(
+    override val reference: Reference,
+): IChapter {
 }
