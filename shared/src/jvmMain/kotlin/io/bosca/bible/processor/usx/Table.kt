@@ -1,5 +1,9 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.components.ComponentContainer
+import io.bosca.bible.components.ContainerType
+import io.bosca.bible.components.StyleReference
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 
@@ -15,6 +19,12 @@ class Table(
     override val htmlClass = ""
 
     override fun toHtml(context: HtmlContext) = context.render("table", this)
+    override fun toComponent(context: ComponentContext) =
+        ComponentContainer(
+            ContainerType.TABLE,
+            items.mapNotNull { it.toComponent(context) },
+            StyleReference(htmlClass)
+        )
 }
 
 interface RowItem : Item
@@ -29,6 +39,12 @@ class Row(
 
     override val htmlClass = style
     override fun toHtml(context: HtmlContext) = context.render("tr", this)
+    override fun toComponent(context: ComponentContext) =
+        ComponentContainer(
+            ContainerType.ROW,
+            items.mapNotNull { it.toComponent(context) },
+            StyleReference(htmlClass)
+        )
 }
 
 // type TableContentType = Footnote | CrossReference | Char | Milestone | Figure | Verse | Break | Text
@@ -46,6 +62,12 @@ class TableContent(
     override val htmlClass = style
 
     override fun toHtml(context: HtmlContext) = context.render("td", this)
+    override fun toComponent(context: ComponentContext) =
+        ComponentContainer(
+            ContainerType.COLUMN,
+            items.mapNotNull { it.toComponent(context) },
+            StyleReference(htmlClass)
+        )
 }
 
 object TableFactory : ItemFactory<Table>("table") {

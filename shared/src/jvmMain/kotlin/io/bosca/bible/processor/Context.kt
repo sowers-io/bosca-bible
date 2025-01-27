@@ -36,11 +36,14 @@ class Context(private val book: Book) {
     private val positions = Stack<Position>()
     private val verses = Stack<VerseItems>()
 
-    val position: Position
-        get() = positions.last()
+    val currentChapterReference: Reference
+        get() = chapters.last().reference
 
-    fun pushVerse(bookChapterUsfm: Reference, verse: VerseStart, position: Position) {
-        verses.push(VerseItems("${bookChapterUsfm.usfm}.${verse.number}", position, verse))
+    val position: Position
+        get() = positions.peek()
+
+    fun pushVerse(verse: VerseStart, position: Position) {
+        verses.push(VerseItems(Reference("${currentChapterReference.usfm}.${verse.number}"), position, verse))
     }
 
     fun popVerse(): VerseItems = verses.pop()
@@ -51,13 +54,13 @@ class Context(private val book: Book) {
             return verses.peek()?.verse
         }
 
-    fun add(parent: Usx?, item: Item): VerseStart? {
+    fun add(parent: Usx?, item: Item): Reference? {
         if (verses.isEmpty()) return null
-        val verses = this.verses.last()
+        val verses = this.verses.peek()
         if (parent == null || parent.verse != verses.verse) {
             verses.add(item)
         }
-        return verses.verseStart
+        return verses.reference
     }
 
     fun supports(factory: ItemFactory<*>, parent: Node, tag: Tag, progression: Int? = null): Boolean {
@@ -171,7 +174,7 @@ class Context(private val book: Book) {
             chapters.add(chapter)
             nodes.add(Node(node.factory, chapter, position))
         } else if (item is VerseStart) {
-            pushVerse(chapters.last().reference, item, Position(item.position.start))
+            pushVerse(item, Position(item.position.start))
         }
         if (node.item is ItemContainer<*>) {
             @Suppress("UNCHECKED_CAST")

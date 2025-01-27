@@ -1,5 +1,6 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
@@ -20,6 +21,7 @@ class VerseEnd(
     override val htmlClass: String = ""
     override val htmlAttributes: Map<String, String> = emptyMap()
 
+    override fun toComponent(context: ComponentContext) = io.bosca.bible.components.VerseEnd()
     override fun toHtml(context: HtmlContext) = ""
     override fun toString(context: StringContext) = ""
 }

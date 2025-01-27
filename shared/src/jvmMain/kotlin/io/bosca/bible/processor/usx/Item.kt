@@ -1,5 +1,6 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.Reference
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.Position
 import io.bosca.bible.processor.StringContext
@@ -14,11 +15,14 @@ abstract class AbstractItem(
     parent: Usx?
 ) : Item {
 
-    private val _verse: VerseStart? = context.add(parent, this)
+    private val _reference = context.add(parent, this)
+
+    override val reference: Reference? = _reference
 
     override val position: Position = context.position
 
-    override val verse: String? = _verse?.number
+    override val verse: String?
+        get() = reference?.number
 
     override fun toString() = toString(StringContext.default)
 }

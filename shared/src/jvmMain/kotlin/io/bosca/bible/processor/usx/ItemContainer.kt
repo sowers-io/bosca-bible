@@ -1,7 +1,8 @@
 package io.bosca.bible.processor.usx
 
 import io.bosca.bible.components.ComponentContainer
-import io.bosca.bible.components.IComponent
+import io.bosca.bible.components.ContainerType
+import io.bosca.bible.components.StyleReference
 import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
@@ -12,10 +13,7 @@ abstract class ItemContainer<T : Item>(
     parent: Usx?
 ) : AbstractItem(context, parent) {
 
-    private val _verse: VerseStart? = context.add(parent, this)
-
     private val _items = mutableListOf<T>()
-    override val verse: String? = _verse?.number
 
     val items: kotlin.collections.List<T>
         get() = _items
@@ -28,7 +26,11 @@ abstract class ItemContainer<T : Item>(
     }
 
     override fun toComponent(context: ComponentContext) =
-        ComponentContainer(items.map { it.toComponent(context) }, context.getStyle(this))
+        ComponentContainer(
+            ContainerType.DIV,
+            items.mapNotNull { it.toComponent(context) },
+            StyleReference(htmlClass)
+        )
 
     override fun toHtml(context: HtmlContext) = context.render("div", this)
 

@@ -1,6 +1,10 @@
 package io.bosca.bible.processor.usx
 
 import io.bosca.bible.ParaStyle
+import io.bosca.bible.components.ComponentContainer
+import io.bosca.bible.components.ContainerType
+import io.bosca.bible.components.StyleReference
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 
@@ -20,6 +24,13 @@ class Paragraph(
     override val htmlClass = style.toString()
 
     override fun toHtml(context: HtmlContext) = context.render("p", this)
+
+    override fun toComponent(context: ComponentContext) =
+        ComponentContainer(
+            ContainerType.PARAGRAPH,
+            items.mapNotNull { it.toComponent(context) },
+            StyleReference(htmlClass)
+        )
 }
 
 object ParagraphFactory : ItemFactory<Paragraph>("para") {

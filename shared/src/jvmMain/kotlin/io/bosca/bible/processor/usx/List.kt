@@ -2,6 +2,7 @@ package io.bosca.bible.processor.usx
 
 import io.bosca.bible.ListStyle
 import io.bosca.bible.processor.Context
+import io.bosca.bible.processor.HtmlContext
 
 // type ListType = Reference | Footnote | CrossReference | Char | ListChar | Milestone | Figure | Break
 
@@ -18,6 +19,16 @@ class List(
     val vid = attributes["VID"]
 
     override val htmlClass = style.toString()
+
+    override fun toHtml(context: HtmlContext) = context.render("li", this) {
+        var childItems = ""
+        for (item in it) {
+            childItems += "<li>"
+            childItems += item.toHtml(context)
+            childItems += "</li>"
+        }
+        childItems
+    }
 }
 
 object ListFactory : ItemFactory<List>("para", StyleFactoryFilter(ListStyle.entries) { ListStyle.valueOf(it) }) {

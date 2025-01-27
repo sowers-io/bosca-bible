@@ -1,5 +1,7 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.components.StyleReference
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
@@ -29,9 +31,19 @@ class Text(
 
     override val htmlAttributes: Map<String, String>
         get() {
-            if (verse == null) return emptyMap()
-            return mapOf("data-verse" to verse)
+            val verse = verse ?: return emptyMap()
+            return reference?.let {
+                mapOf(
+                    "data-usfm" to it.usfm,
+                    "data-verse" to verse
+                )
+            } ?: mapOf("data-verse" to verse)
         }
+
+    override fun toComponent(context: ComponentContext) = io.bosca.bible.components.Text(
+        text,
+        StyleReference(htmlClass)
+    )
 
     override fun toHtml(context: HtmlContext): String {
         if (text.trim().isEmpty()) return ""

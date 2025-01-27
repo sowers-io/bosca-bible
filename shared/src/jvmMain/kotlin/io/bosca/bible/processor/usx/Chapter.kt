@@ -39,6 +39,7 @@ class Chapter(
     private val _end: ChapterEnd? = null
 
     val number = start.number
+
     override val reference = Reference("${book.reference.usfm}.${start.number}")
 
     override val htmlClass = "chapter c$number"
@@ -57,10 +58,10 @@ class Chapter(
 
     fun addVerseItems(items: List<VerseItems>) {
         items.forEach {
-            var current = verseItems[it.usfm]
+            var current = verseItems[it.reference.usfm]
             if (current == null) {
                 current = mutableListOf()
-                verseItems[it.usfm] = current
+                verseItems[it.reference.usfm] = current
             }
             current.add(it)
         }

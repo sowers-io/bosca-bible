@@ -1,6 +1,7 @@
 package io.bosca.bible.processor.usx
 
 import io.bosca.bible.BookChapterLabelStyle
+import io.bosca.bible.Reference
 import io.bosca.bible.processor.Context
 
 class BookChapterLabel(

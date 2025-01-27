@@ -1,3 +1,5 @@
 package io.bosca.bible
 
-expect suspend fun process(filename: String): IBible
+import io.bosca.bible.components.IStyle
+
+expect suspend fun process(filename: String): Pair<IBible, List<IStyle>>

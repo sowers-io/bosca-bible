@@ -1,5 +1,6 @@
 package io.bosca.bible.processor
 
+import io.bosca.bible.processor.usx.Item
 import io.bosca.bible.processor.usx.ItemContainer
 import io.bosca.bible.processor.usx.Usx
 import io.bosca.bible.processor.usx.VerseItems
@@ -20,7 +21,15 @@ class HtmlContext(
         this.indent -= 2
     }
 
-    fun render(tag: String, item: Usx, text: String? = null): String {
+    fun render(tag: String, item: Usx, text: String? = null, forEach: ((items: List<Item>) -> String)? = null): String {
+        val defaultForEach = { items: List<Item> ->
+            var childHtml = ""
+            for (child in items) {
+                childHtml += child.toHtml(this)
+            }
+            childHtml
+        }
+
         var html = ""
         if (this.pretty) html += " ".repeat(this.indent)
         html += "<$tag"
@@ -37,13 +46,9 @@ class HtmlContext(
             if (this.pretty) html += " ".repeat(this.indent)
             childHtml += text
         } else if (item is ItemContainer<*>) {
-            for (child in item.items) {
-                childHtml += child.toHtml(this)
-            }
+            childHtml += (forEach ?: defaultForEach).invoke(item.items)
         } else if (item is VerseItems) {
-            for (child in item.items) {
-                childHtml += child.toHtml(this)
-            }
+            childHtml += (forEach ?: defaultForEach).invoke(item.items)
         } else {
             childHtml += item.toHtml(this)
         }

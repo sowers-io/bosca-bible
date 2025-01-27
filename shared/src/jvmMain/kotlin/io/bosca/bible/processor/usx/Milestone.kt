@@ -1,5 +1,7 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.components.IComponent
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
@@ -18,6 +20,7 @@ class Milestone(context: Context, parent: Item?, attributes: Attributes) : Abstr
     override val htmlClass = style
     override val htmlAttributes = emptyMap<String, String>()
 
+    override fun toComponent(context: ComponentContext) = null
     override fun toHtml(context: HtmlContext) = context.render("milestone", this)
     override fun toString(context: StringContext) = ""
 }

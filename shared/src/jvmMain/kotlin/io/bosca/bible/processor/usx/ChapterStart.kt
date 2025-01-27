@@ -1,5 +1,6 @@
 package io.bosca.bible.processor.usx
 
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.HtmlContext
 import io.bosca.bible.processor.StringContext
@@ -19,6 +20,7 @@ class ChapterStart(
     override val htmlClass: String = ""
     override val htmlAttributes = emptyMap<String, String>()
 
+    override fun toComponent(context: ComponentContext) = null
     override fun toHtml(context: HtmlContext) = ""
     override fun toString(context: StringContext) = ""
 }
