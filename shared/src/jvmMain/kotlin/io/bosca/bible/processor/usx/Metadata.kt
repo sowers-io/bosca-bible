@@ -1,6 +1,6 @@
 package io.bosca.bible.processor.usx
 
-import io.bosca.bible.IName
+import io.bosca.bible.*
 import kotlin.collections.List
 
 class ManifestName(private val name: Map<String, Any>): IName {
@@ -21,9 +21,9 @@ class ManifestName(private val name: Map<String, Any>): IName {
         get() = name["long"] as String
 }
 
-class MetadataSystemId(private val systemId: List<Map<String, Any>>) {
+class MetadataSystemId(private val systemId: List<Map<String, Any>>): IBibleSystem {
 
-    val id: String
+    override val id: String
         get() {
             for (id in systemId) {
                 if (id["type"] == "paratext") {
@@ -34,45 +34,45 @@ class MetadataSystemId(private val systemId: List<Map<String, Any>>) {
         }
 }
 
-class MetadataIdentification(private val identification: Map<String, Any>) {
+class MetadataIdentification(private val identification: Map<String, Any>): IBibleIdentification {
 
     @Suppress("UNCHECKED_CAST")
-    val systemId = MetadataSystemId(identification["systemId"] as List<Map<String, Any>>)
+    override val system = MetadataSystemId(identification["systemId"] as List<Map<String, Any>>)
 
-    val name: String
+    override val name: String
         get() = identification["name"] as String
 
-    val nameLocal: String
+    override val nameLocal: String
         get() = identification["nameLocal"] as String
 
-    val description: String
+    override val description: String
         get() = identification["description"] as String
 
-    val abbreviation: String
+    override val abbreviation: String
         get() = identification["abbreviation"] as String
 
-    val abbreviationLocal: String
+    override val abbreviationLocal: String
         get() = identification["abbreviationLocal"] as String
 }
 
-class MetadataLanguage(private val language: Map<String, Any>) {
+class MetadataLanguage(private val language: Map<String, Any>): IBibleLanguage {
 
-    val iso: String
+    override val iso: String
         get() = language["iso"] as String
 
-    val name: String
+    override val name: String
         get() = language["name"] as String
 
-    val nameLocal: String
+    override val nameLocal: String
         get() = language["nameLocal"] as String
 
-    val script: String
+    override val script: String
         get() = language["script"] as String
 
-    val scriptCode: String
+    override val scriptCode: String
         get() = language["scriptCode"] as String
 
-    val scriptDirection: String
+    override val scriptDirection: String
         get() = language["scriptDirection"] as String
 }
 
@@ -104,13 +104,13 @@ class PublicationContent(private val content: Map<String, Any>) {
         get() = content["src"] as String
 }
 
-class Metadata(private val metadata: Map<String, Any>) {
+class Metadata(private val metadata: Map<String, Any>): IBibleMetadata {
 
     @Suppress("UNCHECKED_CAST")
-    val identification = MetadataIdentification(metadata["identification"] as Map<String, Any>)
+    override val identification = MetadataIdentification(metadata["identification"] as Map<String, Any>)
 
     @Suppress("UNCHECKED_CAST")
-    val language = MetadataLanguage(metadata["language"] as Map<String, Any>)
+    override val language = MetadataLanguage(metadata["language"] as Map<String, Any>)
 
     val publication: Publication = metadata.let {
         @Suppress("UNCHECKED_CAST")

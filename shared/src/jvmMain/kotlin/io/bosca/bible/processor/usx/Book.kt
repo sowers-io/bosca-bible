@@ -7,7 +7,7 @@ import io.bosca.bible.Reference
 import io.bosca.bible.processor.Position
 
 class Book(
-    override val name: IName,
+    override val name: ManifestName,
     private val content: PublicationContent,
     private val raw: String
 ) : IBook {
@@ -29,6 +29,10 @@ class Book(
     fun addChapter(chapter: IChapter) {
         _chapters.add(chapter)
         _chaptersByUsfm[chapter.reference.chapterUsfm] = chapter
+    }
+
+    fun getRawContent(): String {
+        return this.raw
     }
 
     fun getRawContent(position: Position): String {

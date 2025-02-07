@@ -43,6 +43,6 @@ actual object BibleFactory {
             books.add(book)
         }
 
-        return Bible(books, stylesheet ?: emptyList())
+        return Bible(metadata, books, stylesheet ?: emptyList())
     }
 }
