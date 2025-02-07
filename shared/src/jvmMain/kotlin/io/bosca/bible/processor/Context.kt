@@ -2,6 +2,7 @@ package io.bosca.bible.processor
 
 import io.bosca.bible.*
 import io.bosca.bible.Reference
+import io.bosca.bible.components.StyleRegistry
 import io.bosca.bible.processor.usx.*
 import io.bosca.bible.processor.usx.Book
 import io.bosca.bible.processor.usx.Chapter
@@ -23,7 +24,7 @@ internal enum class BookTagResult {
     unknown,
 }
 
-class Context(private val book: Book) {
+class Context(private val book: Book, private val registry: StyleRegistry) {
 
     private val chapters = mutableListOf<Chapter>()
     private val nodes = mutableListOf<Node>()
@@ -169,7 +170,7 @@ class Context(private val book: Book) {
         if (item is ChapterStart) {
             progression = false
             positions.push(Position(position))
-            val chapter = Chapter(this, null, book, item)
+            val chapter = Chapter(this, null, book, item, registry)
             positions.pop()
             chapters.add(chapter)
             nodes.add(Node(node.factory, chapter, position))

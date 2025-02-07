@@ -1,14 +1,15 @@
 package io.bosca.bible.processor
 
+import io.bosca.bible.components.StyleRegistry
 import io.bosca.bible.processor.usx.*
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamReader
 
 class BookProcessor {
 
-    fun process(name: ManifestName, content: PublicationContent, data: ByteArray): Book {
+    fun process(name: ManifestName, content: PublicationContent, data: ByteArray, registry: StyleRegistry): Book {
         val book = Book(name, content, String(data, Charsets.UTF_8))
-        val context = Context(book)
+        val context = Context(book, registry)
         val input = data.inputStream()
         val factory = XMLInputFactory.newInstance()
         val reader = factory.createXMLStreamReader(input)

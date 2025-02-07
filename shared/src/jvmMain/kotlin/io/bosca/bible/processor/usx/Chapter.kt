@@ -2,6 +2,10 @@ package io.bosca.bible.processor.usx
 
 import io.bosca.bible.IChapter
 import io.bosca.bible.Reference
+import io.bosca.bible.components.IComponent
+import io.bosca.bible.components.StyleRegistry
+import io.bosca.bible.components.initializeStyles
+import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.Context
 import io.bosca.bible.processor.StringContext
 import kotlin.collections.List
@@ -33,10 +37,11 @@ class Chapter(
     parent: Item?,
     book: Book,
     val start: ChapterStart,
+    private val registry: StyleRegistry,
 ) : ItemContainer<ChapterItem>(context, parent), IChapter {
 
     private val verseItems = mutableMapOf<String, MutableList<VerseItems>>()
-    private val _end: ChapterEnd? = null
+    private var _end: ChapterEnd? = null
 
     val number = start.number
 
@@ -53,8 +58,14 @@ class Chapter(
         get() = _end ?: error("Chapter end not defined.")
         set(end) {
             if (_end != null) error("Chapter end already defined.")
-            _end
+            _end = end
         }
+
+    override operator fun get(reference: Reference): IComponent {
+        val components = toComponent(ComponentContext())
+        components.initializeStyles(registry)
+        return components
+    }
 
     fun addVerseItems(items: List<VerseItems>) {
         items.forEach {

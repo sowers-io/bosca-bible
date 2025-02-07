@@ -1,16 +1,11 @@
+import io.bosca.bible.BibleFactory
 import io.bosca.bible.Reference
-import io.bosca.bible.components.Style
-import io.bosca.bible.components.StyleRegistry
-import io.bosca.bible.components.initializeStyles
-import io.bosca.bible.process
-import io.bosca.bible.processor.ComponentContext
 import io.bosca.bible.processor.HtmlContext
-import io.bosca.bible.processor.usx.Bible
 import io.bosca.bible.processor.usx.Book
 import io.bosca.bible.processor.usx.Chapter
 
 suspend fun main() {
-    val (bible, styles) = process("../asv.zip")
+    val bible = BibleFactory.getBible("../asv.zip")
 
     val reference = Reference("GEN.2")
     val book = bible[reference] as Book? ?: error("missing book")
@@ -23,11 +18,7 @@ suspend fun main() {
         includeVerseNumbers = true
     )))
 
-    val registry = StyleRegistry()
-    registry.register(styles)
-
-    val components = chapter.toComponent(ComponentContext())
-    components.initializeStyles(registry)
+    val components = chapter[reference]
 
     println(components)
 }
