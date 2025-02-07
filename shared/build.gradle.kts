@@ -6,8 +6,13 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
+    id("maven-publish")
+
 //    alias(libs.plugins.androidLibrary)
 }
+
+group = "io.bosca.bible"
+version = "0.0.1"
 
 kotlin {
 //    androidTarget {
@@ -59,3 +64,16 @@ kotlin {
 //        minSdk = libs.versions.android.minSdk.get().toInt()
 //    }
 //}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/sowers-io/bosca-bible")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
